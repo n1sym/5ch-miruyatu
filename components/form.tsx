@@ -41,9 +41,9 @@ class inputForm extends React.Component<{}, inputFormType> {
             使用方法：
           </div>
           
-          1. 任意のスレッドを開く <br></br>
+          1. 任意のスレを開く <br></br>
           2. 「Ctrl + A」で全範囲を選択してコピーする<br></br>
-          3. 以下にペースト <br></br><br></br>
+          3. 以下のテキストエリアにペーストする <br></br><br></br>
           なにかありましたら、
           <a className="text-blue-500" href="https://twitter.com/hukurouo_code" target="_blank" rel="noopener noreferrer">@hukurouo_code</a> までお願いします。
           
@@ -51,7 +51,7 @@ class inputForm extends React.Component<{}, inputFormType> {
         <form onSubmit={this.handleSubmit}>
           <Textarea
             mb="8"
-            placeholder="Here is a sample placeholder"
+            placeholder="ここにペーストしてください"
             value={this.state.value}
             onChange={this.handleChange}
           />
