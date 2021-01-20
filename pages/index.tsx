@@ -5,7 +5,8 @@ import { Heading } from "@chakra-ui/react"
 const siteTitle = "5chログをツリー表示にするやつ";
 export default function Home() {
   return (
-    <div className="max-w-screen-md mx-auto mt-12 px-4">
+    <div className="bg-gray-100">
+    <div className="max-w-screen-md min-h-screen mx-auto p-4 bg-white">
       <Head>
         <title>5chtree</title>
         <link rel="icon" href="/favicon.ico" />
@@ -17,11 +18,12 @@ export default function Home() {
         <meta name="twitter:card" content="summary" />
       </Head>
       <main>
-        <div className="flex justify-center mb-12">
+        <div className="flex justify-center mb-12 mt-8">
           <Heading>5chログをツリー表示にするやつ β版</Heading>
         </div>
         <Form/>
       </main>
+    </div>
     </div>
   );
 }

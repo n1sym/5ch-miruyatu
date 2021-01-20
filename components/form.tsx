@@ -35,7 +35,7 @@ class inputForm extends React.Component<{}, inputFormType> {
 
   render() {
     return (
-      <div className="w-full mb-12">
+      <div className="mb-12">
         <div className="my-4">
           <div className="mb-2 text-lg font-semibold">
             使用方法：
@@ -74,15 +74,25 @@ export default inputForm;
 
 function ResItem(props) {
   const res = props.res;
+  const isImage = (val: string) => /(imgur)(.+)(\.|=)(svg|png|jpg|gif)$/.test(val);
   const content = (
     <div className="border-l-4 pl-4">
       {res.content.map((cont: string, index: number) => {
-        return <div key={index}>{cont}</div>;
+        return unitRes(isImage(cont), index, cont)
       })}
       <div className="text-gray-300 text-xs">ID: {res.header.slice(0, 5)}</div>
     </div>
   );
   return <ListItem ml={props.res.nest * 8}>{content}</ListItem>;
+}
+
+function unitRes(isImage:boolean, index:number, content:string){
+  const thumbnail = content.slice(0,-4) + 't' + content.slice(-4)
+  if(isImage){
+    return <div key={index}> <a href={content} target="_blank" rel="noopener"><img className="max-w-xs" src={thumbnail} alt={content} loading="lazy" /></a></div>
+  } else {
+    return <div key={index}>{content}</div>
+  }
 }
 
 function iikanzi(text: string) {
