@@ -6,7 +6,7 @@ const siteTitle = "5chログをツリー表示にするやつ";
 export default function Home() {
   return (
     <div className="bg-gray-100">
-    <div className="max-w-screen-md min-h-screen mx-auto p-4 bg-white">
+    <div className="max-w-screen-md min-h-screen mx-auto p-8 bg-white">
       <Head>
         <title>5chtree</title>
         <link rel="icon" href="/favicon.ico" />

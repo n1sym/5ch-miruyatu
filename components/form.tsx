@@ -59,7 +59,7 @@ class inputForm extends React.Component<{}, inputFormType> {
         <div>
           {this.state.result.map((res, index) => {
             return (
-              <List key={index} className="mb-2">
+              <List key={index} className="">
                 <ResItem res={res} />
               </List>
             );
@@ -74,20 +74,39 @@ export default inputForm;
 
 function ResItem(props) {
   const res = props.res;
-  const isImage = (val: string) => /(imgur)(.+)(\.|=)(svg|png|jpg|gif)$/.test(val);
+  const isImage = (val: string) => /(imgur)(.+)(\.|=)(svg|png|jpg|jpeg|gif)$/.test(val);
+  const borderCSS = "border-l-2 pl-4 ml-4"
+  const nest1 = (val) => <div className={borderCSS}>{val}</div>
+  const nest2 = (val) => <div className={borderCSS}><div className={borderCSS}>{val}</div></div>
+  const nest3 = (val) => <div className={borderCSS}><div className={borderCSS}><div className={borderCSS}>{val}</div></div></div>
+  const nest4 = (val) => <div className={borderCSS}><div className={borderCSS}><div className={borderCSS}><div className={borderCSS}>{val}</div></div></div></div>
+  const nest5 = (val) => <div className={borderCSS}><div className={borderCSS}><div className={borderCSS}><div className={borderCSS}><div className={borderCSS}>{val}</div></div></div></div></div>
+  const nest6 = (val) => <div className={borderCSS}><div className={borderCSS}><div className={borderCSS}><div className={borderCSS}><div className={borderCSS}><div className={borderCSS}>{val}</div></div></div></div></div></div>
+  const nest7 = (val) => <div className={borderCSS}><div className={borderCSS}><div className={borderCSS}><div className={borderCSS}><div className={borderCSS}><div className={borderCSS}><div className={borderCSS}>{val}</div></div></div></div></div></div></div>
   const content = (
-    <div className="border-l-4 pl-4">
+    <div className="py-1">
       {res.content.map((cont: string, index: number) => {
         return unitRes(isImage(cont), index, cont)
       })}
       <div className="text-gray-300 text-xs">ID: {res.header.slice(0, 5)}</div>
     </div>
   );
-  return <ListItem ml={props.res.nest * 8}>{content}</ListItem>;
+  switch (res.nest){
+    case 0 : return <ListItem><div className="my-1">{(content)}</div></ListItem>;
+    case 1 : return <ListItem>{nest1(content)}</ListItem>;
+    case 2 : return <ListItem>{nest2(content)}</ListItem>;
+    case 3 : return <ListItem>{nest3(content)}</ListItem>;
+    case 4 : return <ListItem>{nest4(content)}</ListItem>;
+    case 5 : return <ListItem>{nest5(content)}</ListItem>;
+    case 6 : return <ListItem>{nest6(content)}</ListItem>;
+    case 7 : return <ListItem>{nest7(content)}</ListItem>;
+    default : return <></>
+  }
+  
 }
 
 function unitRes(isImage:boolean, index:number, content:string){
-  const thumbnail = content.slice(0,-4) + 't' + content.slice(-4)
+  const thumbnail = content.includes("jpeg") ? content.slice(0,-5) + 't' + content.slice(-5) : content.slice(0,-4) + 't' + content.slice(-4)
   if(isImage){
     return <div key={index}> <a href={content} target="_blank" rel="noopener"><img className="max-w-xs" src={thumbnail} alt={content} loading="lazy" /></a></div>
   } else {
@@ -128,6 +147,11 @@ function iikanzi(text: string) {
       res.content.push(e);
     }
   });
+  let lastResRow = 0
+  res.content.forEach((e,i)=>{
+    if(e.includes("コメント")){ lastResRow = i}
+  })
+  res.content = res.content.slice(0,lastResRow)
   resArray.push(res);
   resArray.forEach((res) => {
     if (res.to == "") {
