@@ -88,7 +88,7 @@ function ResItem(props) {
       {res.content.map((cont: string, index: number) => {
         return unitRes(index, cont)
       })}
-      <div className="text-gray-300 text-xs">ID: {res.header.slice(0, 5)}</div>
+      <div className="text-gray-300 text-xs"> {res.num} ID: {res.header.slice(0, 5)}</div>
     </div>
   );
   switch (res.nest){
@@ -118,14 +118,13 @@ function unitRes(index:number, content:string){
 }
 
 function iikanzi(text: string) {
-  console.log(text);
   const splitText = text.split("\n").filter((x) => x !== "");
-  console.log(splitText);
   let resArray = [];
   let resNum = 1;
   let res = { num: "", header: "", to: "", nest: 0, content: [] };
   let nests = {};
   const isAnchor = (val: string) => /(>>)(\d{1,})/.test(val);
+  const isLastRes = (val:string) => /(\d{1,})(コメント)/.test(val);
   const isheader = (val: string) =>
     /(\d.+\d{4}\/\d{2}\/\d{2}\(.\) \d{2}:\d{2}:\d{2}.\d{2})/.test(val);
   splitText.forEach((e) => {
@@ -152,9 +151,11 @@ function iikanzi(text: string) {
   });
   let lastResRow = 0
   res.content.forEach((e,i)=>{
-    if(e.includes("コメント")){ lastResRow = i}
+    if(isLastRes(e)){ lastResRow = i }
   })
-  res.content = res.content.slice(0,lastResRow)
+  console.log(lastResRow)
+  res.content = res.content.slice(0,1)
+
   resArray.push(res);
   resArray.forEach((res) => {
     if (res.to == "") {
