@@ -1,6 +1,7 @@
 import React from "react";
 import { Textarea } from "@chakra-ui/react";
 import { List, ListItem, UnorderedList } from "@chakra-ui/react";
+import isUrl from 'is-url'
 
 type inputFormType = {
   value: string;
@@ -36,7 +37,7 @@ class inputForm extends React.Component<{}, inputFormType> {
   render() {
     return (
       <div className="mb-12">
-        <div className="my-4">
+        <div className="my-8">
           <div className="mb-2 text-lg font-semibold">
             使用方法：
           </div>
@@ -74,9 +75,8 @@ export default inputForm;
 
 function ResItem(props) {
   const res = props.res;
-  const isImage = (val: string) => /(imgur)(.+)(\.|=)(svg|png|jpg|jpeg|gif)$/.test(val);
   const borderCSS = "border-l-2 pl-4 ml-4"
-  const nest1 = (val) => <div className={borderCSS}>{val}</div>
+  const nest1 = (val: JSX.Element) => <div className={borderCSS}>{val}</div>
   const nest2 = (val) => <div className={borderCSS}><div className={borderCSS}>{val}</div></div>
   const nest3 = (val) => <div className={borderCSS}><div className={borderCSS}><div className={borderCSS}>{val}</div></div></div>
   const nest4 = (val) => <div className={borderCSS}><div className={borderCSS}><div className={borderCSS}><div className={borderCSS}>{val}</div></div></div></div>
@@ -86,7 +86,7 @@ function ResItem(props) {
   const content = (
     <div className="py-1">
       {res.content.map((cont: string, index: number) => {
-        return unitRes(isImage(cont), index, cont)
+        return unitRes(index, cont)
       })}
       <div className="text-gray-300 text-xs">ID: {res.header.slice(0, 5)}</div>
     </div>
@@ -105,10 +105,13 @@ function ResItem(props) {
   
 }
 
-function unitRes(isImage:boolean, index:number, content:string){
+function unitRes(index:number, content:string){
+  const isImage = (val: string) => /(imgur)(.+)(\.|=)(svg|png|jpg|jpeg|gif)$/.test(val);
   const thumbnail = content.includes("jpeg") ? content.slice(0,-5) + 't' + content.slice(-5) : content.slice(0,-4) + 't' + content.slice(-4)
-  if(isImage){
+  if(isImage(content)){
     return <div key={index}> <a href={content} target="_blank" rel="noopener"><img className="max-w-xs" src={thumbnail} alt={content} loading="lazy" /></a></div>
+  } else if (isUrl(content)) {
+    return <div key={index}> <a className="text-blue-500" href={content} target="_blank" rel="noopener">{content}</a></div>
   } else {
     return <div key={index}>{content}</div>
   }
@@ -173,7 +176,7 @@ function iikanzi(text: string) {
     const currentNestRes = resArray.filter((res) => {
       return res.nest == nest;
     });
-    currentNestRes.forEach((res) => {
+    currentNestRes.reverse().forEach((res) => {
       const anchorNum = res.to;
       let index = 0;
       let flg = true;
