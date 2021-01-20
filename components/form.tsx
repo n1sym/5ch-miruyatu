@@ -144,7 +144,7 @@ function iikanzi(text: string) {
       }
       resNum++;
     } else if (isAnchor(e)) {
-      res.to = e.split(">>")[1];
+      res.to = e.split(">>")[1].replace(' ','');
     } else {
       res.content.push(e);
     }
