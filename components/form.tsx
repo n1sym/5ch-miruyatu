@@ -106,10 +106,14 @@ function ResItem(props) {
 }
 
 function unitRes(index:number, content:string){
-  const isImage = (val: string) => /(imgur)(.+)(\.|=)(svg|png|jpg|jpeg|gif)$/.test(val);
-  const thumbnail = content.includes("jpeg") ? content.slice(0,-5) + 't' + content.slice(-5) : content.slice(0,-4) + 't' + content.slice(-4)
+  const isImage = (val: string) => /(imgur|twimg)(.+)(\.|=)(svg|png|jpg|jpeg|gif)$/.test(val);
+  const isImgur = (val: string) => /(imgur)(.+)(\.|=)(svg|png|jpg|jpeg|gif)$/.test(val);
+  let thumbnail = content
+  if (isImgur(content)) {
+    thumbnail = content.includes("jpeg") ? content.slice(0,-5) + 't' + content.slice(-5) : content.slice(0,-4) + 't' + content.slice(-4)
+  }
   if(isImage(content)){
-    return <div key={index}> <a href={content} target="_blank" rel="noopener"><img className="max-w-xs" src={thumbnail} alt={content} loading="lazy" /></a></div>
+    return <span key={index}> <a href={content} target="_blank" rel="noopener"><img className="max-w-xs" src={thumbnail} alt={content} loading="lazy" /></a></span>
   } else if (isUrl(content)) {
     return <div key={index}> <a className="text-blue-500" href={content} target="_blank" rel="noopener">{content}</a></div>
   } else {
@@ -123,12 +127,27 @@ function iikanzi(text: string) {
   let resNum = 1;
   let res = { num: "", header: "", to: "", nest: 0, content: [] };
   let nests = {};
+  let now = null;
   const isAnchor = (val: string) => /(>>)(\d{1,})/.test(val);
   const isLastRes = (val:string) => /(\d{1,})(コメント)/.test(val);
   const isheader = (val: string) =>
     /(\d.+\d{4}\/\d{2}\/\d{2}\(.\) \d{2}:\d{2}:\d{2}.\d{2})/.test(val);
   splitText.forEach((e) => {
     if (isheader(e)) {
+      //console.log(e)
+      const date = e.match(/(\d{4}\/\d{2}\/\d{2})/)[0]
+      const time = e.match(/(\d{2}:\d{2}:\d{2})/)[0]
+      const tnow = Date.parse(date + " " + time)
+      //console.log(tnow)
+      if (!now) {
+        now = tnow
+      } else {
+        if (tnow + 15000 < now) {
+          return;
+        } else {
+          now = tnow
+        }
+      }
       if (res.num) {
         resArray.push(res);
       }
@@ -153,7 +172,7 @@ function iikanzi(text: string) {
   res.content.forEach((e,i)=>{
     if(isLastRes(e)){ lastResRow = i }
   })
-  console.log(lastResRow)
+  //console.log(lastResRow)
   res.content = res.content.slice(0,1)
 
   resArray.push(res);
@@ -191,7 +210,7 @@ function iikanzi(text: string) {
       Array.prototype.splice.apply(result, [index, 0].concat([res]));
     });
   });
-  console.log(resArray);
-  console.log(result);
+  //console.log(resArray);
+  //console.log(result);
   return result;
 }
