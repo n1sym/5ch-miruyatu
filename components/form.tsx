@@ -71,6 +71,11 @@ class inputForm extends React.Component<{}, inputFormType> {
   }
 }
 
+// TODO
+// h抜きの画像URLにも対応
+// IDでNG機能
+// cookieでNGワード
+
 export default inputForm;
 
 function ResItem(props) {
